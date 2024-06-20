@@ -1,5 +1,7 @@
 ﻿using MSoC_API.Models;
 using Newtonsoft.Json;
+using System.Formats.Tar;
+using System.Net.Mime;
 
 namespace MSoC_API.Services;
 
@@ -21,5 +23,20 @@ public class FileService
         var json = JsonConvert.SerializeObject(fileList); //serialize FileListModel to json
 
         return json;
+    }
+
+    public async Task<FileContent?> GetFile(string fileName)
+    {
+        if (!File.Exists(fileName))
+        {
+            return null;
+        }
+
+        var file = new FileContent
+        {
+            Name = fileName,
+            Content = await File.ReadAllBytesAsync(fileName),
+        };
+        return file;
     }
 }
