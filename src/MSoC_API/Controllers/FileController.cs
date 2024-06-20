@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using MSoC_API.Services;
 
 namespace MSoC_API.Controllers;
 
 [ApiController]
-public class FileController
+public class FileController(FileService service) : ControllerBase
 {
     [HttpGet("api/files")]
-    public Task GetAllFiles()
+    public ActionResult<string> GetAllFiles()
     {
-        return Task.CompletedTask;
+        var json = service.GetAllFilesInFolder();
+        return Ok(json);
     }
 
     [HttpGet("api/files/{fileName}")]
