@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MSoC_API.Services;
+using System.Net.Mime;
 
 namespace MSoC_API.Controllers;
 
@@ -15,9 +16,15 @@ public class FileController(FileService service) : ControllerBase
     }
 
     [HttpGet("api/files/{fileName}")]
-    public Task GetFile([FromRoute] string fileName)
+    public async Task<ActionResult> GetFile([FromRoute] string fileName)
     {
-        return Task.CompletedTask;
-    }
+        var file = await service.GetFile(fileName);
 
+        if (file == null)
+        {
+            return BadRequest();
+        }
+
+        return File(file.Content, file.ContentType, file.Name);
+    }
 }
