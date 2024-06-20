@@ -2,14 +2,15 @@
 using Newtonsoft.Json;
 using System.Formats.Tar;
 using System.Net.Mime;
+using MSoC_API.Utils;
 
 namespace MSoC_API.Services;
 
-public class FileService
+public class FileService(FileSystemOptions fileSystemOptions)
 {
     public string GetAllFilesInFolder()
     {
-        var d = new DirectoryInfo(@"./FileSystem");//test folder with random .txt files
+        var d = new DirectoryInfo(fileSystemOptions.FileSystemPath);//test folder with random .txt files
 
         var files = d.GetFiles();//get all files in folder
 
@@ -27,7 +28,8 @@ public class FileService
 
     public async Task<FileContent?> GetFile(string fileName)
     {
-        if (!File.Exists(fileName))
+        var filePath = Path.Combine(fileSystemOptions.FileSystemPath, fileName);
+        if (!File.Exists(filePath))
         {
             return null;
         }
@@ -35,7 +37,7 @@ public class FileService
         var file = new FileContent
         {
             Name = fileName,
-            Content = await File.ReadAllBytesAsync(fileName),
+            Content = await File.ReadAllBytesAsync(filePath),
         };
         return file;
     }

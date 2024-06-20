@@ -1,5 +1,10 @@
 
+using Microsoft.AspNetCore.Builder.Extensions;
+using Microsoft.Extensions.Configuration;
 using MSoC_API.Services;
+using MSoC_API.Utils;
+using System.Net.Mail;
+using System.Net;
 
 namespace MSoC_API
 {
@@ -16,6 +21,14 @@ namespace MSoC_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<FileService>();
+
+            builder.Services.AddSingleton<FileService>();
+
+            var fileSystemOptions = new FileSystemOptions();
+
+            builder.Configuration.GetSection("FileSystemOptions").Bind(fileSystemOptions);
+
+            builder.Services.AddTransient(_ => fileSystemOptions);
 
             var app = builder.Build();
 
