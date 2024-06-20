@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Formats.Tar;
 using System.Net.Mime;
 using MSoC_API.Utils;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace MSoC_API.Services;
 
@@ -34,11 +35,19 @@ public class FileService(FileSystemOptions fileSystemOptions)
             return null;
         }
 
+        var provider = new FileExtensionContentTypeProvider();
+        if (!provider.TryGetContentType(filePath, out var contentType))
+        {
+            contentType = "text/plain";
+        }
+
         var file = new FileContent
         {
             Name = fileName,
             Content = await File.ReadAllBytesAsync(filePath),
+            ContentType = contentType,
         };
+
         return file;
     }
 }
