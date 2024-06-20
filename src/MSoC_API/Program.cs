@@ -1,4 +1,6 @@
 
+using MSoC_API.Services;
+
 namespace MSoC_API
 {
     public class Program
@@ -13,6 +15,7 @@ namespace MSoC_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<FileService>();
 
             var app = builder.Build();
 
