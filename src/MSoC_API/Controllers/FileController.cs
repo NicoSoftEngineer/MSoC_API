@@ -30,7 +30,7 @@ public class FileController(FileService service) : ControllerBase
 
     //an endpoint that allows user to recieve content of a file 
     [HttpGet("api/files/{fileName}/content")]
-    public async Task<ActionResult> GetFileContent([FromRoute] string fileName)
+    public async Task<ActionResult<string>> GetFileContent([FromRoute] string fileName)
     {
         var content = await service.GetFileContent(fileName);
 

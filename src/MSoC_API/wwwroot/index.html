@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MSoC</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+<body>
+    <a href="http://localhost:5292/swagger">swagger</a>
+
+    <div class="container">
+        <h3>Retrieve file</h3>
+        <form class="form">
+            <input type="text" id="filePath" value="" placeholder="filePath" />
+            <button onclick="RetrieveFileWithAJAX()">Retrieve file</button>
+        </form>
+        <div id="downloadFile">
+
+        </div>
+        <h3>Show content of a file file</h3>
+        <form class="form">
+            <input type="text" id="fileContentPath" value="" placeholder="filePath" />
+            <button onclick="RetrieveContentOfFileWithFetch()">Retrieve file</button>
+        </form>
+        <div id="fileContent">
+
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+</html>
