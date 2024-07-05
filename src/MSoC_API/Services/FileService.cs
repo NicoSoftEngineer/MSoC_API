@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Formats.Tar;
 using System.Net.Mime;
+using System.Text;
 using MSoC_API.Utils;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -49,5 +50,17 @@ public class FileService(FileSystemOptions fileSystemOptions)
         };
 
         return file;
+    }
+    //function that returns content of a file
+    public async Task<string?> GetFileContent(string fileName)
+    {
+        var file = await GetFile(fileName);
+
+        if (file == null)
+        {
+            return null;
+        }
+
+        return Encoding.UTF8.GetString(file.Content);
     }
 }

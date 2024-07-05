@@ -22,9 +22,23 @@ public class FileController(FileService service) : ControllerBase
 
         if (file == null)
         {
-            return BadRequest();
+            return BadRequest("File does not exist");
         }
 
         return File(file.Content, file.ContentType, file.Name);
+    }
+
+    //an endpoint that allows user to recieve content of a file 
+    [HttpGet("api/files/{fileName}/content")]
+    public async Task<ActionResult> GetFileContent([FromRoute] string fileName)
+    {
+        var content = await service.GetFileContent(fileName);
+
+        if (content == null)
+        {
+            return BadRequest("File does not exist");
+        }
+
+        return Ok(content);
     }
 }
