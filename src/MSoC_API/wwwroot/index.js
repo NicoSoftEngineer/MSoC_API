@@ -50,26 +50,26 @@ async function RetrieveFileWithAJAX() {
     xhttp.send();
 }
 
-async function RetrieveContentOfFileWithFetch() {
+async function RetrieveContentOfFileWithAJAX() {
     event.preventDefault();
     let filePath = document.getElementById(`fileContentPath`).value;
     let requestUri = `${uri}/files/${filePath}/content`;
+
     let response = ""
-    await fetch(requestUri, {
-        method: `GET`,
-    }).then(x => {
-        response = x;
-        console.log(x);
-    })
-        .catch(y => response = y);
-    alert(response)
-    console.log(response.status)
-    if (response.status == 200) {
-        document.getElementById("fileContent").innerHTML = 
-            `<p>${response.content}</p>`
-    }
-    else {
-        document.getElementById("fileContent").innerHTML = ` 
+    console.log(requestUri)
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+        response = this
+        alert(response)
+        console.log(response)
+        if (response.status == 200) {
+            document.getElementById("fileContent").innerHTML = `<p> ${response.response}</p>`;
+        }
+        else {
+            document.getElementById("fileContent").innerHTML = ` 
         <h2>File not found</h2>`
+        }
     }
+    xhttp.open("GET", requestUri, true);
+    xhttp.send();
 }

@@ -39,14 +39,12 @@ namespace MSoC_API
                 app.UseSwaggerUI();
             }
 
-            app.UseStaticFiles(); // This should come before UseDefaultFiles to avoid conflicts
+            app.UseStaticFiles();
 
             var options = new DefaultFilesOptions();
             options.DefaultFileNames.Clear();
             options.DefaultFileNames.Add("index.html");
             app.UseDefaultFiles(options);
-
-            //app.UseStaticFiles(); // This should come before UseDefaultFiles to avoid conflicts
 
 
             app.UseRouting();
