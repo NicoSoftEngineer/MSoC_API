@@ -63,4 +63,29 @@ public class FileService(FileSystemOptions fileSystemOptions)
 
         return Encoding.UTF8.GetString(file.Content);
     }
+    //function that returns a certain lines of a file, specified by line number. start number and end number
+    public async Task<string?> GetFileContentInRange(string fileName, int start, int end)
+    {
+        var file = await GetFileContent(fileName);
+
+        if (file == null)
+        {
+            return null;
+        }
+
+        var lines = file.Split('\n');
+
+        if (start < 0 || start >= lines.Length || end < 0)
+        {
+            return null;
+        }
+
+        var sb = new StringBuilder();
+        for (var i = start; i <= end; i++)
+        {
+            sb.AppendLine(lines[i]);
+        }
+
+        return sb.ToString();
+    }
 }

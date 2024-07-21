@@ -41,4 +41,22 @@ public class FileController(FileService service) : ControllerBase
 
         return Ok(content);
     }
+
+    //an endpoint to return a part of a file
+    [HttpGet("api/files/{fileName}/content/range")]
+    public async Task<ActionResult<string>> GetFileContentInRange([FromRoute] string fileName, [FromQuery] int start, [FromQuery] int end)
+    {
+        //make start and end 0 based
+        start--;
+        end--;
+
+        var content = await service.GetFileContentInRange(fileName, start, end);
+
+        if (content == null)
+        {
+            return BadRequest("File does not exist");
+        }
+
+        return Ok(content);
+    }
 }
