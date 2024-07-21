@@ -22,7 +22,7 @@ namespace MSoC_API
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<FileService>();
 
-            builder.Services.AddSingleton<FileService>();
+            builder.Services.AddSingleton<KeyWordService>();
 
             var fileSystemOptions = new FileSystemOptions();
 

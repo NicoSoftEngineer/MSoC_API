@@ -10,6 +10,7 @@ namespace MSoC_API.Services;
 
 public class FileService(FileSystemOptions fileSystemOptions)
 {
+    public int MyProperty { get; set; }
     public string GetAllFilesInFolder()
     {
         var d = new DirectoryInfo(fileSystemOptions.FileSystemPath);//test folder with random .txt files
