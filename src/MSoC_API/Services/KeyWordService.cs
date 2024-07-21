@@ -3,18 +3,20 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using MSoC_API.Models;
+using MSoC_API.Utils;
 using Newtonsoft.Json;
 
 //using StaticCodeAnalysis.Loaders;
 
 namespace MSoC_API.Services;
 
-public class KeyWordService
+public class KeyWordService(FileSystemOptions fileSystemOptions)
 {
     public string? GetKeywords(string path)
     {
+        var filePath = Path.Combine(fileSystemOptions.FileSystemPath, path);
         // Load the tree
-        var tree = LoadTree(path);
+        var tree = LoadTree(filePath);
 
         if (tree is null)
         {
@@ -34,6 +36,29 @@ public class KeyWordService
 
         return JsonConvert.SerializeObject(keyWords);
     }
+
+    public string? GetFunctionContentByKeyword(string path, string keyword)
+    {
+        var filePath = Path.Combine(fileSystemOptions.FileSystemPath, path);
+
+        // Load the tree
+        var tree = LoadTree(filePath);
+
+        if (tree is null)
+        {
+            return null;
+        }
+
+        var function = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().FirstOrDefault(x => x.Identifier.Text == keyword);
+
+        if (function is null)
+        {
+            return null;
+        }
+
+        return function.ToFullString();
+    }
+
     public SyntaxTree? LoadTree(string path)
     {
         string file = File.ReadAllText(path);

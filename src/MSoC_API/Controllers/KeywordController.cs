@@ -7,7 +7,7 @@ namespace MSoC_API.Controllers;
 public class KeywordController(KeyWordService service) : ControllerBase
 {
     [HttpGet("api/keywords/{fileName}")]
-    public ActionResult<string> GetFile([FromRoute] string fileName)
+    public ActionResult<string> GetKeyWords([FromRoute] string fileName)
     {
         var keyWordsInJson = service.GetKeywords(fileName);
 
@@ -16,6 +16,19 @@ public class KeywordController(KeyWordService service) : ControllerBase
             return BadRequest("File does not exist");
         }
         return Ok(keyWordsInJson);
+
+    }
+
+    [HttpGet("api/keywords/{fileName}/{keyWord}")]
+    public ActionResult<string> GetContentOfFunctionByKeyword([FromRoute] string fileName, [FromRoute] string keyWord)
+    {
+        var functionContentByKeyword = service.GetFunctionContentByKeyword(fileName, keyWord);
+
+        if (functionContentByKeyword == null)
+        {
+            return BadRequest("File or keyWord not found!!");
+        }
+        return Ok(functionContentByKeyword);
 
     }
 }
