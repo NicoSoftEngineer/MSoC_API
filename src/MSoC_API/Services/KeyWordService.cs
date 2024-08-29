@@ -74,19 +74,19 @@ public class KeyWordService(FileSystemOptions fileSystemOptions)
         var keyWords = new KeyWordModel
         {
             Properties = tree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>()
-                .Select(x => x.Identifier.Text).ToList(),
+                .Select(x => x.Identifier.Text).ToHashSet().ToList(),
             Methods = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Select(x => x.Identifier.Text)
-                .ToList(),
+                .ToHashSet().ToList(),
             Enums = tree.GetRoot().DescendantNodes().OfType<EnumDeclarationSyntax>().Select(x => x.Identifier.Text)
-                .ToList(),
+                .ToHashSet().ToList(),
             Interfaces = tree.GetRoot().DescendantNodes().OfType<InterfaceDeclarationSyntax>()
-                .Select(x => x.Identifier.Text).ToList(),
+                .Select(x => x.Identifier.Text).ToHashSet().ToList(),
             Classes = tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().Select(x => x.Identifier.Text)
-                .ToList(),
+                .ToHashSet().ToList(),
             Fields = tree.GetRoot().DescendantNodes().OfType<FieldDeclarationSyntax>()
-                .Select(x => x.Declaration.Variables.First().Identifier.Text).ToList(),
+                .Select(x => x.Declaration.Variables.First().Identifier.Text).ToHashSet().ToList(),
             Constructors = tree.GetRoot().DescendantNodes().OfType<ConstructorDeclarationSyntax>()
-                .Select(x => x.Identifier.Text).ToList()
+                .Select(x => x.Identifier.Text).ToHashSet().ToList()
         };
         return keyWords;
     }
