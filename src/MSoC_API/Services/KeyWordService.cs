@@ -22,20 +22,12 @@ public class KeyWordService(FileSystemOptions fileSystemOptions)
         {
             return null;
         }
-
-        var keyWords = new KeyWordModel
-        {
-            Properties = tree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().Select(x => x.Identifier.Text).ToList(),
-            Methods = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Select(x => x.Identifier.Text).ToList(),
-            Enums = tree.GetRoot().DescendantNodes().OfType<EnumDeclarationSyntax>().Select(x => x.Identifier.Text).ToList(),
-            Interfaces = tree.GetRoot().DescendantNodes().OfType<InterfaceDeclarationSyntax>().Select(x => x.Identifier.Text).ToList(),
-            Classes = tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().Select(x => x.Identifier.Text).ToList(),
-            Fields = tree.GetRoot().DescendantNodes().OfType<FieldDeclarationSyntax>().Select(x => x.Declaration.Variables.First().Identifier.Text).ToList(),
-            Constructors = tree.GetRoot().DescendantNodes().OfType<ConstructorDeclarationSyntax>().Select(x => x.Identifier.Text).ToList()
-        };
+        //Load keywords
+        var keyWords = GetKeyWordsFromSyntaxTree(tree);
 
         return JsonConvert.SerializeObject(keyWords);
     }
+
 
     public string? GetFunctionContentByKeyword(string path, string keyword)
     {
@@ -49,21 +41,23 @@ public class KeyWordService(FileSystemOptions fileSystemOptions)
             return null;
         }
 
-        var function = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().FirstOrDefault(x => x.Identifier.Text == keyword);
+        var functions = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>()
+            .Where(x => x.Identifier.Text == keyword).ToList();
 
-        if (function is null)
+        if (!functions.Any())
         {
             return null;
         }
 
-        return function.ToFullString();
+        var functionsContents = functions.Select(x => x.ToFullString()).ToList();
+        return JsonConvert.SerializeObject(functionsContents);
     }
 
     public SyntaxTree? LoadTree(string path)
     {
         string file = File.ReadAllText(path);
 
-        if(string.IsNullOrWhiteSpace(file))
+        if (string.IsNullOrWhiteSpace(file))
         {
             Console.WriteLine("The file is empty.");
             return null;
@@ -73,5 +67,27 @@ public class KeyWordService(FileSystemOptions fileSystemOptions)
         var tree = CSharpSyntaxTree.ParseText(file);
 
         return tree;
+    }
+
+    private static KeyWordModel GetKeyWordsFromSyntaxTree(SyntaxTree tree)
+    {
+        var keyWords = new KeyWordModel
+        {
+            Properties = tree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>()
+                .Select(x => x.Identifier.Text).ToList(),
+            Methods = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Select(x => x.Identifier.Text)
+                .ToList(),
+            Enums = tree.GetRoot().DescendantNodes().OfType<EnumDeclarationSyntax>().Select(x => x.Identifier.Text)
+                .ToList(),
+            Interfaces = tree.GetRoot().DescendantNodes().OfType<InterfaceDeclarationSyntax>()
+                .Select(x => x.Identifier.Text).ToList(),
+            Classes = tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().Select(x => x.Identifier.Text)
+                .ToList(),
+            Fields = tree.GetRoot().DescendantNodes().OfType<FieldDeclarationSyntax>()
+                .Select(x => x.Declaration.Variables.First().Identifier.Text).ToList(),
+            Constructors = tree.GetRoot().DescendantNodes().OfType<ConstructorDeclarationSyntax>()
+                .Select(x => x.Identifier.Text).ToList()
+        };
+        return keyWords;
     }
 }

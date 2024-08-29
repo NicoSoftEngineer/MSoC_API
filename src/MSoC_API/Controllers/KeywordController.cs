@@ -26,7 +26,7 @@ public class KeywordController(KeyWordService service) : ControllerBase
 
         if (functionContentByKeyword == null)
         {
-            return BadRequest("File or keyWord not found!!");
+            return BadRequest("File or keyword of a function/method was not found!!");
         }
         return Ok(functionContentByKeyword);
 
